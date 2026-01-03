@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mano Robótica EMG</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f4f6f8;
+  padding:30px;
+}
+
+.card{
+  background:white;
+  padding:25px;
+  border-radius:15px;
+  max-width:520px;
+  margin:auto;
+  box-shadow:0 6px 15px rgba(0,0,0,.12);
+}
+
+h2{
+  color:#e67e22;
+  text-align:center;
+}
+
+.estado{
+  font-size:22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:25px;
+}
+
+.indicador{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  margin-left:10px;
+}
+
+.verde{ background:#2ecc71; }
+.rojo{ background:#e74c3c; }
+
+footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:13px;
+  color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>MANO ROBÓTICA EMG</h2>
+
+  <div class="estado">
+    <span>Estado del sistema:</span>
+    <div style="display:flex; align-items:center;">
+      <span id="txt">---</span>
+      <div id="led" class="indicador rojo"></div>
+    </div>
+  </div>
+
+  <footer>
+    ESP32 · EMG · PCA9685
+  </footer>
+</div>
+
+<script>
+const ESP32_IP = "http://192.168.101.60";
+
+setInterval(() => {
+  fetch(`${ESP32_IP}/estado`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.estado == 50) {
+        txt.textContent = "CERRADA";
+        led.className = "indicador verde";
+      } else {
+        txt.textContent = "ABIERTA";
+        led.className = "indicador rojo";
+      }
+    })
+    .catch(() => {
+      txt.textContent = "SIN CONEXIÓN";
+      led.className = "indicador rojo";
+    });
+}, 500);
+</script>
+
+</body>
+</html>
